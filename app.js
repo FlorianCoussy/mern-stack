@@ -117,15 +117,13 @@ const deleteTourById = (req, res) => {
   );
 };
 
-app.get(`${API_VERSION}/tours`, getAllTours);
+app.route(`${API_VERSION}/tours`).get(getAllTours).post(createTour);
 
-app.get(`${API_VERSION}/tours/:id`, getTourById);
-
-app.post(`${API_VERSION}/tours`, createTour);
-
-app.patch(`${API_VERSION}/tours/:id`, updateTourById);
-
-app.delete(`${API_VERSION}/tours/:id`, deleteTourById);
+app
+  .route(`${API_VERSION}/tours/:id`)
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}...`);
