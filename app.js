@@ -17,15 +17,15 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/data/tours-simple.json`, FILE_FORMAT)
 );
 
-app.get(`${API_VERSION}/tours`, (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: Status.SUCCESS,
     results: tours.length,
     data: { tours },
   });
-});
+};
 
-app.get(`${API_VERSION}/tours/:id`, (req, res) => {
+const getTourById = (req, res) => {
   const id = Number(req.params.id);
   const tour = tours.find((t) => t.id === id);
 
@@ -41,9 +41,9 @@ app.get(`${API_VERSION}/tours/:id`, (req, res) => {
     status: Status.SUCCESS,
     data: { tour },
   });
-});
+};
 
-app.post(`${API_VERSION}/tours`, async (req, res) => {
+const createTour = async (req, res) => {
   const newTour = { id: tours.length, ...req.body };
   const data = [...tours, newTour];
 
@@ -59,9 +59,9 @@ app.post(`${API_VERSION}/tours`, async (req, res) => {
       });
     }
   );
-});
+};
 
-app.patch(`${API_VERSION}/tours/:id`, (req, res) => {
+const updateTourById = (req, res) => {
   const id = Number(req.params.id);
   const tour = tours.find((t) => t.id === id);
 
@@ -88,7 +88,44 @@ app.patch(`${API_VERSION}/tours/:id`, (req, res) => {
       });
     }
   );
-});
+};
+
+const deleteTourById = (req, res) => {
+  const id = Number(req.params.id);
+  const tour = tours.find((t) => t.id === id);
+
+  if (!tour) {
+    res.status(404).json({
+      status: Status.FAILURE,
+      message: `Tour with id : ${id} not found`,
+    });
+    return;
+  }
+
+  const data = tours.filter((t) => t.id !== id);
+
+  fs.writeFile(
+    `${__dirname}/data/tours-simple.json`,
+    JSON.stringify(data),
+    FILE_FORMAT,
+    () => {
+      res.status(204).json({
+        status: Status.SUCCESS,
+        data: null,
+      });
+    }
+  );
+};
+
+app.get(`${API_VERSION}/tours`, getAllTours);
+
+app.get(`${API_VERSION}/tours/:id`, getTourById);
+
+app.post(`${API_VERSION}/tours`, createTour);
+
+app.patch(`${API_VERSION}/tours/:id`, updateTourById);
+
+app.delete(`${API_VERSION}/tours/:id`, deleteTourById);
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}...`);
