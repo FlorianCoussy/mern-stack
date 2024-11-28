@@ -61,6 +61,35 @@ app.post(`${API_VERSION}/tours`, async (req, res) => {
   );
 });
 
+app.patch(`${API_VERSION}/tours/:id`, (req, res) => {
+  const id = Number(req.params.id);
+  const tour = tours.find((t) => t.id === id);
+
+  if (!tour) {
+    res.status(404).json({
+      status: Status.FAILURE,
+      message: `Tour with id : ${id} not found`,
+    });
+    return;
+  }
+
+  const data = tours.map((t) => {
+    return t.id !== id ? { ...t, ...req.body } : t;
+  });
+
+  fs.writeFile(
+    `${__dirname}/data/tours-simple.json`,
+    JSON.stringify(data),
+    FILE_FORMAT,
+    () => {
+      res.status(200).json({
+        status: Status.SUCCESS,
+        data: { tour: data[id] },
+      });
+    }
+  );
+});
+
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}...`);
 });
