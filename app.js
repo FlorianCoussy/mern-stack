@@ -11,12 +11,24 @@ const Status = {
 };
 
 const app = express();
-app.use(express.json()); // express.json is a middleware that parse incoming JSON payloads and make data available in the req.body
+
+// express.json is a middleware that parse incoming JSON payloads and make data available in the req.body
+app.use(express.json());
+
+// Defining a customed middleware
+app.use((req, res, next) => {
+  console.log("Hello from the middleware 👋");
+
+  req.requestedAt = new Date().toISOString();
+
+  next();
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/data/tours-simple.json`, FILE_FORMAT)
 );
 
+// Route handlers
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: Status.SUCCESS,
@@ -117,6 +129,7 @@ const deleteTourById = (req, res) => {
   );
 };
 
+// Chaining route handlers
 app.route(`${API_VERSION}/tours`).get(getAllTours).post(createTour);
 
 app
