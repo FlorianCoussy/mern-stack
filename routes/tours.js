@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  checkIfTourExists,
   createTour,
   deleteTourById,
   getAllTours,
@@ -9,6 +10,9 @@ const {
 
 // Defining routers
 const router = express.Router();
+
+// Param validators
+router.param("id", checkIfTourExists);
 
 // Chaining route handlers
 router.route("/").get(getAllTours).post(createTour);
