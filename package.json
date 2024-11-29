@@ -2,9 +2,8 @@
   "name": "natours",
   "version": "1.0.0",
   "description": "Learning MERN stack",
-  "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon server.js"
   },
   "author": "Florian COUSSY",
   "license": "MIT",

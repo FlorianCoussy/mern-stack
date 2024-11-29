@@ -4,7 +4,6 @@ const tourRouter = require("./routes/tours");
 const userRouter = require("./routes/users");
 
 const API_VERSION = "/api/v1";
-const PORT = 3000;
 
 const app = express();
 
@@ -28,6 +27,4 @@ app.use((req, res, next) => {
 app.use(`${API_VERSION}/tours`, tourRouter);
 app.use(`${API_VERSION}/users`, userRouter);
 
-app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}...`);
-});
+module.exports = app;
