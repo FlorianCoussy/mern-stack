@@ -134,14 +134,65 @@ const deleteTourById = (req, res) => {
   );
 };
 
-// Chaining route handlers
-app.route(`${API_VERSION}/tours`).get(getAllTours).post(createTour);
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: Status.FAILURE,
+    message: "This route is not implemented",
+  });
+};
 
-app
-  .route(`${API_VERSION}/tours/:id`)
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: Status.FAILURE,
+    message: "This route is not implemented",
+  });
+};
+
+const getUserById = (req, res) => {
+  res.status(500).json({
+    status: Status.FAILURE,
+    message: "This route is not implemented",
+  });
+};
+
+const updateUserById = (req, res) => {
+  res.status(500).json({
+    status: Status.FAILURE,
+    message: "This route is not implemented",
+  });
+};
+
+const deleteUserById = (req, res) => {
+  res.status(500).json({
+    status: Status.FAILURE,
+    message: "This route is not implemented",
+  });
+};
+
+// Defining routers
+const tourRouter = express.Router();
+const userRouter = express.Router();
+
+// Chaining route handlers
+tourRouter.route("/").get(getAllTours).post(createTour);
+
+tourRouter
+  .route("/:id")
   .get(getTourById)
   .patch(updateTourById)
   .delete(deleteTourById);
+
+userRouter.route("/").get(getAllUsers).post(createUser);
+
+userRouter
+  .route("/:id")
+  .get(getUserById)
+  .patch(updateUserById)
+  .delete(deleteUserById);
+
+// Mounting the routers
+app.use(`${API_VERSION}/tours`, tourRouter);
+app.use(`${API_VERSION}/users`, userRouter);
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}...`);
