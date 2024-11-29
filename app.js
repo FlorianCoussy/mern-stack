@@ -1,5 +1,6 @@
 const fs = require("fs");
 const express = require("express");
+const morgan = require("morgan");
 
 const API_VERSION = "/api/v1";
 const PORT = 3000;
@@ -14,6 +15,10 @@ const app = express();
 
 // express.json is a middleware that parse incoming JSON payloads and make data available in the req.body
 app.use(express.json());
+
+// morgan is a logger middleware
+// "dev" format : :method :url :status :response-time ms - :res[content-length]
+app.use(morgan("dev"));
 
 // Defining a customed middleware
 app.use((req, res, next) => {
