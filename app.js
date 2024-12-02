@@ -7,12 +7,14 @@ const API_VERSION = "/api/v1";
 
 const app = express();
 
-// express.json is a middleware that parse incoming JSON payloads and make data available in the req.body
-app.use(express.json());
-
 // morgan is a logger middleware
 // "dev" format : :method :url :status :response-time ms - :res[content-length]
 app.use(morgan("dev"));
+
+// express.json is a middleware that parse incoming JSON payloads and make data available in the req.body
+app.use(express.json());
+// express.static is a middleware that serves static content
+app.use(express.static(`${__dirname}/public`));
 
 // Defining a customed middleware
 app.use((req, res, next) => {
