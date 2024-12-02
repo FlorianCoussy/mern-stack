@@ -9,6 +9,18 @@ const FILE_URI = `${appDir}/data/tours-simple.json`;
 
 const tours = JSON.parse(fs.readFileSync(FILE_URI, FILE_FORMAT));
 
+exports.checkBodyValues = (req, res, next) => {
+  if (!req.body || !req.body.name || !req.body.price) {
+    res.status(400).json({
+      status: Status.FAILURE,
+      message: "Tour name or price is missing",
+    });
+    return;
+  }
+
+  next();
+};
+
 exports.checkIfTourExists = (req, res, next, value) => {
   const id = Number(value);
   const tour = tours.find((t) => t.id === id);
