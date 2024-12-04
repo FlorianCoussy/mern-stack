@@ -9,7 +9,9 @@ const app = express();
 
 // morgan is a logger middleware
 // "dev" format : :method :url :status :response-time ms - :res[content-length]
-app.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // express.json is a middleware that parse incoming JSON payloads and make data available in the req.body
 app.use(express.json());
