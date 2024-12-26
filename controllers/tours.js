@@ -44,12 +44,23 @@ exports.checkIfTourExists = (req, res, next, value) => {
 };
 
 // Route handlers
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    status: Status.SUCCESS,
-    results: tours.length,
-    data: { tours },
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+
+    res.status(200).json({
+      status: Status.SUCCESS,
+      results: tours.length,
+      data: { tours },
+    });
+  } catch (err) {
+    console.log("ERROR 💥\n ", err);
+
+    res.status(404).json({
+      status: Status.FAILURE,
+      message: err,
+    });
+  }
 };
 
 exports.getTourById = (req, res) => {
