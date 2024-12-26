@@ -63,14 +63,23 @@ exports.getAllTours = async (req, res) => {
   }
 };
 
-exports.getTourById = (req, res) => {
-  const id = Number(req.params.id);
-  const tour = tours.find((t) => t.id === id);
+exports.getTourById = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+    // const tour = await Tour.findOne({ _id: req.params.id });
 
-  res.status(200).json({
-    status: Status.SUCCESS,
-    data: { tour },
-  });
+    res.status(200).json({
+      status: Status.SUCCESS,
+      data: { tour },
+    });
+  } catch (err) {
+    console.log("ERROR 💥\n ", err);
+
+    res.status(404).json({
+      status: Status.FAILURE,
+      message: err,
+    });
+  }
 };
 
 exports.createTour = async (req, res) => {
