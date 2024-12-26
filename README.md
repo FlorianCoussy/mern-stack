@@ -5,5 +5,6 @@ Master Node by building a real-world RESTful API and web app (with authenticatio
 ### Stack
 
 - Express, NodeJS, JavaScript
+- MongoDB, Mongoose
 - Prettier
 - VSCode

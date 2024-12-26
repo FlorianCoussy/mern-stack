@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { dirname } = require("path");
+const Tour = require("../models/tour");
 
 const appDir = dirname(require.main.filename);
 const Status = require("../types/status");
@@ -9,6 +10,9 @@ const FILE_URI = `${appDir}/data/tours-simple.json`;
 
 const tours = JSON.parse(fs.readFileSync(FILE_URI, FILE_FORMAT));
 
+/**
+ * @deprecated - Mongoose Model makes the name and price fields required
+ */
 exports.checkBodyValues = (req, res, next) => {
   if (!req.body || !req.body.name || !req.body.price) {
     res.status(400).json({
@@ -21,6 +25,9 @@ exports.checkBodyValues = (req, res, next) => {
   next();
 };
 
+/**
+ * @deprecated - MongoDB handles ID validation
+ */
 exports.checkIfTourExists = (req, res, next, value) => {
   const id = Number(value);
   const tour = tours.find((t) => t.id === id);
@@ -56,16 +63,21 @@ exports.getTourById = (req, res) => {
 };
 
 exports.createTour = async (req, res) => {
-  const newTour = { id: tours.length, ...req.body };
-  const data = [...tours, newTour];
+  try {
+    const tour = await Tour.create(req.body);
 
-  fs.writeFile(FILE_URI, JSON.stringify(data), FILE_FORMAT, () => {
     res.status(201).json({
       status: Status.SUCCESS,
-      results: data.length,
-      data: { tour: newTour },
+      data: { tour },
     });
-  });
+  } catch (err) {
+    console.log("ERROR 💥\n ", err);
+
+    res.status(403).json({
+      status: Status.FAILURE,
+      message: err,
+    });
+  }
 };
 
 exports.updateTourById = (req, res) => {

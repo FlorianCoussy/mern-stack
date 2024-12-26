@@ -1,7 +1,5 @@
 const express = require("express");
 const {
-  checkBodyValues,
-  checkIfTourExists,
   createTour,
   deleteTourById,
   getAllTours,
@@ -12,11 +10,11 @@ const {
 // Defining routers
 const router = express.Router();
 
-// Param validators
-router.param("id", checkIfTourExists);
+// Param validators (disabled because MongoDB handles ID validation)
+// router.param("id", checkIfTourExists);
 
 // Chaining route handlers
-router.route("/").get(getAllTours).post(checkBodyValues, createTour);
+router.route("/").get(getAllTours).post(createTour);
 
 router
   .route("/:id")
