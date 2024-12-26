@@ -100,17 +100,26 @@ exports.createTour = async (req, res) => {
   }
 };
 
-exports.updateTourById = (req, res) => {
-  const id = Number(req.params.id);
+exports.updateTourById = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // return the upserted document
+      runValidators: true,
+    });
+    // const tour = await Tour.updateOne({ _id: req.params.id }, req.body);
 
-  const data = tours.map((t) => (t.id === id ? { ...t, ...req.body } : t));
-
-  fs.writeFile(FILE_URI, JSON.stringify(data), FILE_FORMAT, () => {
     res.status(200).json({
       status: Status.SUCCESS,
-      data: { tour: data[id] },
+      data: { tour },
     });
-  });
+  } catch (err) {
+    console.log("ERROR 💥\n ", err);
+
+    res.status(403).json({
+      status: Status.FAILURE,
+      message: err,
+    });
+  }
 };
 
 exports.deleteTourById = (req, res) => {
