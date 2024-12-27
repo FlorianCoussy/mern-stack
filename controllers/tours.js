@@ -1,14 +1,5 @@
-const fs = require("fs");
-const { dirname } = require("path");
-const Tour = require("../models/tour");
-
-const appDir = dirname(require.main.filename);
 const Status = require("../types/status");
-
-const FILE_FORMAT = "UTF-8";
-const FILE_URI = `${appDir}/data/tours-simple.json`;
-
-const tours = JSON.parse(fs.readFileSync(FILE_URI, FILE_FORMAT));
+const Tour = require("../models/tour");
 
 /**
  * @deprecated - Mongoose Model makes the name and price fields required
@@ -30,6 +21,7 @@ exports.checkBodyValues = (req, res, next) => {
  */
 exports.checkIfTourExists = (req, res, next, value) => {
   const id = Number(value);
+  // eslint-disable-next-line no-undef
   const tour = tours.find((t) => t.id === id);
 
   if (!tour) {
