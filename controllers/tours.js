@@ -122,15 +122,20 @@ exports.updateTourById = async (req, res) => {
   }
 };
 
-exports.deleteTourById = (req, res) => {
-  const id = Number(req.params.id);
+exports.deleteTourById = async (req, res) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
 
-  const data = tours.filter((t) => t.id !== id);
-
-  fs.writeFile(FILE_URI, JSON.stringify(data), FILE_FORMAT, () => {
-    res.status(200).json({
+    res.status(204).json({
       status: Status.SUCCESS,
       data: null,
     });
-  });
+  } catch (err) {
+    console.log("ERROR 💥\n ", err);
+
+    res.status(500).json({
+      status: Status.FAILURE,
+      message: err,
+    });
+  }
 };
