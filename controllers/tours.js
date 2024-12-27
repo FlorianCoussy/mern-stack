@@ -38,7 +38,11 @@ exports.checkIfTourExists = (req, res, next, value) => {
 // Route handlers
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    const query = { ...req.query };
+    const excludedFields = ["page", "sort", "limit", "fields"];
+    excludedFields.forEach((field) => delete query[field]);
+
+    const tours = await Tour.find(query);
 
     res.status(200).json({
       status: Status.SUCCESS,
